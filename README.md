@@ -60,13 +60,9 @@ book@id,title@lang,title,author,price@currency,price,categories_category,categor
 - `parent_child` - вложенные элементы
 - `element_N` - повторяющиеся элементы
 
-## Лицензия
-
-Этот проект распространяется под лицензией [MIT](LICENSE).
-
 ---
 
-**Автор**: [Ваше имя]  
+**Автор**: Velial-squaB-Denisco 
 **Версия**: 1.0.0  
 **Дата**: 2023-10-15
 ```
