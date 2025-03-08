@@ -1,46 +1,55 @@
-from lxml import etree
 import xml.etree.ElementTree as ET
+import pandas as pd
 import xml.dom.minidom as minidom
-from xmltoxsd import XSDGenerator  # Убедитесь, что этот модуль установлен и доступен
+from io import BytesIO
 
-def prettify_xml(elem):
-    rough_string = ET.tostring(elem, 'utf-8')
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")
+def process_xml_data(input_file):
+    # ======== 1. Форматирование XML в памяти ========
+    def prettify_xml(elem):
+        rough_string = ET.tostring(elem, 'utf-8')
+        return minidom.parseString(rough_string).toprettyxml(indent="  ")
 
-def format_xml_file(input_file):
     tree = ET.parse(input_file)
-    root = tree.getroot()
-    pretty_xml = prettify_xml(root)
-    return pretty_xml  # Возвращаем отформатированную строку XML
+    formatted_xml = prettify_xml(tree.getroot())
 
-input_xml_file = 'input.xml'
-
-# Форматируем XML и выводим его
-formatted_xml = format_xml_file(input_xml_file)
-
-# Генерируем XSD схему
-generator = XSDGenerator()
-xsd_schema = generator.generate_xsd(input_xml_file)  # Предположим, что это строка
-
-def remove_duplicates(xsd_string):
-    # Преобразуем строку XSD в XML-дерево
-    xsd_tree = etree.fromstring(xsd_string.encode('utf-8'))
-    root = xsd_tree
-
-    # Словарь для хранения уникальных элементов
-    unique_elements = {}
-    for elem in root.findall(".//{http://www.w3.org/2001/XMLSchema}element"):
-        name = elem.get('name')
-        if name not in unique_elements:
-            unique_elements[name] = elem
+    # ======== 2. Парсинг XML данных ========
+    def parse_node(node, path=''):
+        data = {}
+        tag = node.tag.split('}')[-1]
+        current_path = f"{path}{tag}_" if path else f"{tag}_"
+        
+        # Атрибуты
+        for attr, value in node.attrib.items():
+            data[f"{current_path[:-1]}@{attr}"] = value
+            
+        # Дочерние элементы
+        if len(node) > 0:
+            for child in node:
+                data.update(parse_node(child, current_path))
         else:
-            # Удаляем повтор - используем родительский элемент для удаления
-            elem.getparent().remove(elem)
+            data[current_path[:-1]] = node.text.strip() if node.text else None
+        return data
 
-    # Возвращаем измененное дерево в виде строки
-    return etree.tostring(root, pretty_print=True, encoding='unicode')
+    xml_data = []
+    try:
+        root = ET.parse(BytesIO(formatted_xml.encode())).getroot()
+        for item in root:
+            xml_data.append(parse_node(item))
+    except Exception as e:
+        print(f"XML parsing failed: {e}")
+        return []
 
-# Удаляем дубликаты
-cleaned_xsd = remove_duplicates(xsd_schema)
-print(cleaned_xsd)
+    # ======== 3. Сохранение результатов ========
+    final_files = []
+    
+    if xml_data:
+        df = pd.DataFrame(xml_data)
+        df.to_excel('xml_data.xlsx', index=False)
+        df.to_csv('xml_data.csv', index=False)
+        final_files.extend(['xml_data.xlsx', 'xml_data.csv'])
+
+    return final_files
+
+# Запуск обработки
+result_files = process_xml_data('input.xml')
+print(f"Created files: {', '.join(result_files)}")

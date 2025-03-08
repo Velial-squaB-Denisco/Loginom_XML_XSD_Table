@@ -1,0 +1,4 @@
+book@id,book_title@lang,book_title,book_author,book_year,book_price@currency,book_price,book_categories_category,book_stock_store@location,book_stock_store@quantity,book_stock_store
+101,en,The Great Adventure,John Smith,2020,USD,24.99,Adventure,London,30,
+102,es,La Vida Misteriosa,Maria Garcia,2019,EUR,19.50,Drama,Paris,10,
+103,de,Technische Wunder,Max Weber,2022,EUR,35.00,Technology,Berlin,25,
