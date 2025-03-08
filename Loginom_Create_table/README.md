@@ -106,7 +106,7 @@ fill_table(OutputTable, output_frame)
 
 ## Автор
 Velial-squaB-Denisco, 2025
-``` 
+
 
 Эта документация:
 1. Покрывает все ключевые аспекты кода
