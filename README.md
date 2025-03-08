@@ -19,19 +19,6 @@
   ```bash
   pip install pandas lxml xmltoxsd openpyxl
 
-
-## Установка
-
-1. Клонировать репозиторий:
-   ```bash
-   git clone https://github.com/yourusername/xml-parser.git
-   cd xml-parser
-   ```
-2. Установить зависимости:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
 ## Использование
 
 1. Поместите XML-файл в корневую директорию (по умолчанию `input.xml`)
