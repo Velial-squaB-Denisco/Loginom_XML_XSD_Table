@@ -1,10 +1,4 @@
-(Due to technical issues, the search service is temporarily unavailable.)
-
-```markdown
 # XML Parser to Excel/CSV Converter
-
-![Python](https://img.shields.io/badge/Python-3.7%2B-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
 
 Утилита для преобразования XML-файлов в структурированные таблицы Excel/CSV с сохранением иерархии данных и атрибутов.
 
@@ -24,7 +18,7 @@
 - Установленные пакеты:
   ```bash
   pip install pandas lxml xmltoxsd openpyxl
-  ```
+
 
 ## Установка
 
